@@ -1,17 +1,22 @@
-const PROTO_PATH="../restaurant.proto";
+const PROTO_PATH = "../restaurant.proto";
 
-const grpc = require("grpc");
+const grpc = require("@grpc/grpc-js");
 const protoLoader = require("@grpc/proto-loader");
 
-var packageDefinition = protoLoader.loadSync(PROTO_PATH,{
-    keepCase: true,
-    longs: String,
-    enums: String,
-    arrays: true
+const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
+  keepCase: true,
+  longs: String,
+  enums: String,
+  arrays: true,
 });
 
-var restaurantService =grpc.loadPackageDefinition(packageDefinition).RestaurantService;
+// Load the package definition and get the restaurant service
+const restaurantProto =
+  grpc.loadPackageDefinition(packageDefinition).RestaurantService;
 
-const client = new restaurantService("localhost:30043", grpc.credentials.createInsecure());
+const client = new restaurantProto(
+  "localhost:30043",
+  grpc.credentials.createInsecure()
+);
 
 module.exports = client;
